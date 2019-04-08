@@ -1,0 +1,116 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "vmName": "<virtual-machine-name>",
+        "storageAccountName": "<storage-account-name>",
+        "accountid": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+        "location": "<location-name>"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[variables('vmName')]",
+            "location": "[variables('location')]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "apiVersion": "2018-10-01",
+            "resources": [
+                {
+                    "type": "extensions",
+                    "name": "Microsoft.Insights.VMDiagnosticsSettings",
+                    "apiVersion": "2015-05-01-preview",
+                    "location": "[variables('location')",
+                    "dependsOn": [
+                        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Azure.Diagnostics",
+                        "type": "IaaSDiagnostics",
+                        "typeHandlerVersion": "1.12",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "WadCfg": {
+                                "DiagnosticMonitorConfiguration": {
+                                    "overallQuotaInMB": 4096,
+                                    "DiagnosticInfrastructureLogs": {
+                                        "scheduledTransferLogLevelFilter": "Error"
+                                    },
+                                    "Directories": {
+                                        "scheduledTransferPeriod": "PT1M",
+                                        "IISLogs": {
+                                            "containerName": "wad-iis-logfiles"
+                                        },
+                                        "FailedRequestLogs": {
+                                            "containerName": "wad-failedrequestlogs"
+                                        }
+                                    },
+                                    "PerformanceCounters": {
+                                        "scheduledTransferPeriod": "PT1M",
+                                        "sinks": "AzMonSink",
+                                        "PerformanceCounterConfiguration": [
+                                            {
+                                                "counterSpecifier": "\\Memory\\Available Bytes",
+                                                "sampleRate": "PT1M"
+                                            },
+                                            {
+                                                "counterSpecifier": "\\Memory\\% Committed Bytes In Use",
+                                                "sampleRate": "PT1M"
+                                            },
+                                            {
+                                                "counterSpecifier": "\\Memory\\Committed Bytes",
+                                                "sampleRate": "PT1M"
+                                            },
+                                            {
+                                                "counterSpecifier": "\\LogicalDisk(C:)\\Free Megabytes",
+                                                "sampleRate": "PT1M"
+                                            },
+                                            {
+                                                "counterSpecifier": "\\LogicalDisk(C:)\\% Free Space",
+                                                "sampleRate": "PT1M"
+                                            },
+                                            {
+                                                "counterSpecifier": "\\System\\System Up Time",
+                                                "sampleRate": "PT1M"
+                                            }
+                                            
+                                        ]
+                                    },
+                                    "WindowsEventLog": {
+                                        "scheduledTransferPeriod": "PT1M",
+                                        "DataSource": [
+                                            {
+                                                "name": "Application!*"
+                                            }
+                                        ]
+                                    },
+                                    "Logs": {
+                                        "scheduledTransferPeriod": "PT1M",
+                                        "scheduledTransferLogLevelFilter": "Error"
+                                    }
+                                },
+                                "SinksConfig": {
+                                    "Sink": [
+                                        {
+                                            "name": "AzMonSink",
+                                            "AzureMonitor": {}
+                                        }
+                                    ]
+                                }
+                            },
+                            "StorageAccount": "[variables('storageAccountName')]"
+                        },
+                        "protectedSettings": {
+                        "storageAccountName": "[variables('storageAccountName')]",
+                        "storageAccountKey": "[listKeys(variables('accountid'),'2015-06-15').key1]",
+                        "storageAccountEndPoint": "https://core.windows.net/"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
+

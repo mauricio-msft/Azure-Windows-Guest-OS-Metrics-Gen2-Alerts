@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PublicConfig xmlns="http://schemas.microsoft.com/ServiceHosting/2010/10/DiagnosticsConfiguration">
+    <WadCfg>
+        <DiagnosticMonitorConfiguration overallQuotaInMB="4096">
+            <DiagnosticInfrastructureLogs scheduledTransferLogLevelFilter="Error"/>
+            <PerformanceCounters scheduledTransferPeriod="PT1M" sinks="AzMonSink">
+                <PerformanceCounterConfiguration counterSpecifier="\Memory\Available Bytes" sampleRate="PT15S" unit="kilobytes" />
+                <PerformanceCounterConfiguration counterSpecifier="\Memory\% Committed Bytes In Use" sampleRate="PT15S" unit="percent" />
+                <PerformanceCounterConfiguration counterSpecifier="\LogicalDisk(C:)\% Free Space" sampleRate="PT1M" unit="percent" />
+                <PerformanceCounterConfiguration counterSpecifier="\LogicalDisk(C:)\Free Megabytes" sampleRate="PT1M" unit="kilobytes" />
+                <PerformanceCounterConfiguration counterSpecifier="\System\System Up Time" sampleRate="PT1M" unit="Seconds" />
+            </PerformanceCounters>
+
+            <Directories scheduledTransferPeriod="PT5M">  
+                <IISLogs containerName="wad-iis-logfiles" />  
+                <FailedRequestLogs containerName="wad-failedrequestlogs" />  
+            </Directories>
+
+            <WindowsEventLog scheduledTransferPeriod="PT1M">  
+                <DataSource name="Application!*"/>   
+            </WindowsEventLog>    
+
+        </DiagnosticMonitorConfiguration>
+        <SinksConfig>
+            <Sink name="AzMonSink">
+                <AzureMonitor/>
+            </Sink>
+        </SinksConfig>
+    </WadCfg>
+</PublicConfig>
