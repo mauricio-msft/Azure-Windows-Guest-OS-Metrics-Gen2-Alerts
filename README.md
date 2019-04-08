@@ -34,10 +34,10 @@ Set-AzVMDiagnosticsExtension -ResourceGroupName $RG -VMName $VirtualMachine -Dia
 As of today, the Azure Monitor sink is currently in public preview, this will be in all regions by end of June 2019.
 Here are the list of 7 regions currently supported:
 
-1- West Central US 
-2- South Central US
-3- East US
-4- West US 2
-5- Southeast Asia
-6- North Europe
-7- West Europe
+1. West Central US 
+2. South Central US
+3. East US
+4. West US 2
+5. Southeast Asia
+6. North Europe
+7. West Europe
