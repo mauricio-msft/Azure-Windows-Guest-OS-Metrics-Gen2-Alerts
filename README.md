@@ -16,16 +16,19 @@ See the template azuredeploy.json.
 
 
 ## 2- Using PowerShell ##
-
+````
 $RG = "<resourcegroup-name>"
 $VirtualMachine = "<vm-name>"
 $storageAccount = "<storage-account-name>"
 $key = "<storage-key>"
-
+````
+````
 $vm = Get-AzVM -ResourceGroupName $RG -Name $VirtualMachine
 Update-AzVM -ResourceGroupName $RG -VM $vm -AssignIdentity:$SystemAssigned
-
+````
+````
 Set-AzVMDiagnosticsExtension -ResourceGroupName $RG -VMName $VirtualMachine -DiagnosticsConfigurationPath "<path-to-diagnostic.xml>" -StorageAccountName $storageAccount -StorageAccountKey $key -StorageAccountEndpoint "https://core.windows.net/"
+````
 
 ## Region limitations ##
 As of today, the Azure Monitor sink is currently in public preview, this will be in all regions by end of June 2019.
