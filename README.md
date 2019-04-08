@@ -10,7 +10,7 @@ This solution provides two ways to enable the sinks for custom metrics / gen2 me
 
 ## 1- Using ARM Templates ##
 
-This solution has been created based on [official doc](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/collect-custom-metrics-guestos-resource-manager-vm)
+This solution has been created based on this [official doc](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/collect-custom-metrics-guestos-resource-manager-vm)
 
 See the template azuredeploy.json.
 
